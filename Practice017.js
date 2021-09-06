@@ -77,19 +77,24 @@ function findWord(rack) {
   // for every word in the dictionary check every char in the rack to see if it is in the word. if it is use it up
   let result = []
 
-  let rackCopy = rack
-
   for (let i = 0; i < dictionary.length; i++) {
-    rackCopy = rack
+    let rackCopy = rack
+    let usedLetters = []
+
     for (let k = 0; k < dictionary[i].length; k++) {
       if (rackCopy.includes(dictionary[i][k])) {
-        let charIndex = rackCopy.indexOf(dictionary[i][k])
-        rackCopy = rackCopy.slice(0, charIndex) + rackCopy.slice(charIndex + 1)
+        usedLetters.push(dictionary[i][k])
 
+        let charIndex = rackCopy.indexOf(dictionary[i][k])
+
+        rackCopy = rackCopy.slice(0, charIndex) + rackCopy.slice(charIndex + 1)
         if (k === dictionary[i].length - 1) {
-          result.push([calculateScore(dictionary[i]), dictionary[i]])
+          result.push([calculateScore(usedLetters.join('')), dictionary[i]])
           // add the word to an object with the key as the score
         }
+      } else if (rackCopy.includes('_')) {
+        let charIndex = rackCopy.indexOf('_')
+        rackCopy = rackCopy.slice(0, charIndex) + rackCopy.slice(charIndex + 1)
       } else {
         break
       }
@@ -99,4 +104,4 @@ function findWord(rack) {
   result.sort((a, b) => b[0] - a[0])
   return result
 }
-console.table(findWord('SPCQEIU'))
+console.table(findWord('__B'))
