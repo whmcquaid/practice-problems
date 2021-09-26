@@ -31,6 +31,7 @@ const parseToListOfObjects = (array) => {
 const billboardList = getListFromFile('billboard100_2000.csv');
 const listOfObjects = parseToListOfObjects(billboardList);
 
+// create an object with keys as song titles and values that increment each time we see the song
 //  get songs that appear the most in an array of arrays with two indicies the song title and the number of weeks on the board
 
 const getSongsThatAppearsMost = () => {
@@ -45,6 +46,7 @@ const getSongsThatAppearsMost = () => {
   }
   for (key in countNumberOfTimesSongsAppear) {
     if (countNumberOfTimesSongsAppear[key] > 25) {
+      // only get songs on board more than 25 weeks to narrow down our results
       songsOnChartsMostWeeks.push([key, countNumberOfTimesSongsAppear[key]]);
     }
   }
