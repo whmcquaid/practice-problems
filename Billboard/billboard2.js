@@ -10,11 +10,39 @@ const getListFromFile = (fileNameString) => {
   textByLine = textByLine.filter((word) => word !== '');
   return textByLine;
 };
+const mySplit = (string) => {
+  let insideQuotes = false;
+  let arrayFromString = [];
+  let charCount = 0;
+  let start = 0;
+  let endWord = false;
+  if (string.indexOf('"') !== -1) {
+    for (let i = 0; i < string.length; i++) {
+      if (string[i] === '"') {
+        insideQuotes = !insideQuotes;
+      }
+      if (string[i] === ',' && !insideQuotes) {
+        endWord = !endWord;
+      }
+      if (endWord || i === string.length - 1) {
+        arrayFromString.push(string.slice(start, start + charCount));
+        charCount = 0;
+        start = i + 1;
+        endWord = !endWord;
+      }
+      charCount++;
+    }
+  } else {
+    arrayFromString = string.split(',');
+  }
+  return arrayFromString;
+};
 const parseToListOfObjects = (array) => {
   const arrayOfObjects = [];
   let obj = {};
   array.forEach((item) => {
-    let itemArr = item.split(',');
+    let itemArr = mySplit(item);
+
     obj = {
       rank: itemArr[0],
       song: itemArr[1],
@@ -28,19 +56,20 @@ const parseToListOfObjects = (array) => {
   });
   return arrayOfObjects;
 };
-
 const billboardList = getListFromFile('billboard100_2000.csv');
 const listOfObjects = parseToListOfObjects(billboardList);
 // console.log(listOfObjects);
 const getNumberOneSongsWithArtist = () => {
   const result = {};
-  console.log(listOfObjects.length);
   for (let i = 0; i < listOfObjects.length; i++) {
     if (listOfObjects[i].peakRank === '1') {
-      if (result[listOfObjects[i].song] === undefined) {
-        result[listOfObjects[i].song] = 1;
+      if (
+        result[`${listOfObjects[i].artist},${listOfObjects[i].song}`] ===
+        undefined
+      ) {
+        result[`${listOfObjects[i].artist},${listOfObjects[i].song}`] = 1;
       } else {
-        result[listOfObjects[i].song]++;
+        result[`${listOfObjects[i].artist},${listOfObjects[i].song}`]++;
       }
     }
   }
